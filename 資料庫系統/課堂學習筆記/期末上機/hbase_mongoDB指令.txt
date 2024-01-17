@@ -1,0 +1,65 @@
+** hbase、python連線hbase **
+1. https://github.com/dajobe/hbase-docker下載(Code->download)後解壓縮，移動到hbase-docker-master資料夾(C:\Users\User\hbase-docker-master)
+> cd hbase-docker-master
+
+2. 建立Image
+> docker build -t dajobe/hbase .
+
+3. 建一個資料夾
+> mkdir data
+
+4. 啟動Hbase容器
+> docker run -p 16010:16010 -p 9095:9095 -p 8085:8085 --name=hbase-docker -h hbase-docker -d -v C:\Users\User\hbase-docker-master\data:/data dajobe/hbase
+
+//5. 測試Hbase在java運行
+//> docker run --rm -it --link hbase-docker:hbase-docker dajobe/hbase hbase shell
+
+6. 啟動
+> docker run --rm -p 10000:8888 --name dse -e JUPYTER_ENABLE_LAB=yes --user root -e GRANT_SUDO=yes -v work:/home/jovyan/work jupyter/datascience-notebook
+
+7. 進入dse container(鯨魚docker應用程式裡的dse 容器)
+> su -jovyan
+> /opt/conda/bin/conda init bash
+> conda activate
+> python -m pip install happybase
+
+8. 啟動jupyter
+import happybase
+connection = happybase.Connection('172.17.0.2', 9090)  # 網域看container
+connection.create_table('table-name', {'family': dict() })
+connection.tables()
+table = connection.table('table-name')
+table.put('row-key', {'family:qual1':'value1', 'family:qual2':'value2'})
+for k, data in table.scan():
+    print(k, data)
+
+
+------------------------------------
+** mongoDB **
+從上面1.~6.後延續：
+7. 進入dse container(鯨魚docker應用程式裡的dse 容器)->Exec->右邊的open terminal
+> bash
+> python -m pip install pymongo
+
+8. 在docker run的cmd中有指示可進入的jupyter(第二行，改10000)(http://127.0.0.1:10000/lab?token=c0af672f457cf6049d73603040b68a51b624224cad70b44b)
+9. 進入後，點Notebook的python3，就可以輸入Python指令。
+
+10. (https://data.moenv.gov.tw/paradigm) 申請API Key。匯入open data資料:下面的api_key=941ba5b4-6a97-43bc-a048-30fcdc824c5b <-輸入自己的API KEY
+[帳號:jges971821@gmail.com 密碼:Sunny123123_]
+
+import urllib.request as urllib
+import json
+import pymongo
+response = urllib.urlopen('https://data.epa.gov.tw/api/v2/aqx_p_432?offset=0&limit=1000&api_key=941ba5b4-6a97-43bc-a048-30fcdc824c5b&format=json')
+AQI_data = response.read().decode('utf-8')
+AQI_data
+AQI_data = AQI_data.replace('pm2.5', 'pm2_5')
+AQI_data = AQI_data.replace('pm2.5_avg', 'pm2_5_avg')
+AQI_data = AQI_data.replace('"aqi": ""', '"aqi": "-1"')
+AQI_json = json.loads(AQI_data)
+AQI_json['records']
+client = pymongo.MongoClient('172.17.0.2:27017')
+db = client.opendata
+db.AQI.insert_many(AQI_json['records'])
+
+11. (https://www.mongodb.com/try/download/compass) 下載mongoDB的GUI:Compass
