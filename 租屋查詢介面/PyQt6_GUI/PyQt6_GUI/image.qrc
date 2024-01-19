@@ -1,8 +1,0 @@
-<RCC>
-  <qresource prefix="newPrefix">
-    <file>分租套房 (1).png</file>
-    <file>雅房 (1).png</file>
-    <file>整層住家 (1).png</file>
-    <file>獨立套房 (1).png</file>
-  </qresource>
-</RCC>
