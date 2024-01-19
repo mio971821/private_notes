@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'webproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  #PostgreSQL
-        'NAME': 'house2021',  #資料庫名稱
-        'USER': 'postgres',   #資料庫帳號
-        'PASSWORD': 'sunny123123',  #資料庫密碼
-        'HOST': 'localhost',  #Server(伺服器)位址(IP)
-        'PORT': '5433',       #PostgreSQL Port號
+        'NAME': '',  #資料庫名稱
+        'USER': '',   #資料庫帳號
+        'PASSWORD': '',  #資料庫密碼
+        'HOST': '',  #Server(伺服器)位址(IP)
+        'PORT': '',       #PostgreSQL Port號
     }
 }
 
