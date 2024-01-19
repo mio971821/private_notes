@@ -15,7 +15,7 @@
 - 後端資料庫使用PostgreSQL
 - code存於 ->Project_ChungYuan_website 分支  *連接資料庫設定已更動
 
-## Others
+## 關於檔案
 ### 書面報告/口頭簡報
 詳細查看專題摘要、研究動機/目的/方法及結論心得等。
 ### 網頁展示影片
