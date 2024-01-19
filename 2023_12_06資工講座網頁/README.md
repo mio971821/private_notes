@@ -4,4 +4,6 @@
 - 2.使用Google fonts修改網頁中的字型
 - 3.使用一般的HTML語法，進行排版、插入圖片、修改文字屬性等，建構出簡單的HTML網頁
 
-整份download後，可使用編輯器(如Visual Studio)開啟HTML檔查看詳細內容；或點開網頁使用F12查看。
+至DownGit貼上資料夾目錄網址，整份download後，可直接點開html檔查看網頁內容；
+
+直接從github查看code或使用編輯器(如Visual Studio)開啟HTML檔查看code。
