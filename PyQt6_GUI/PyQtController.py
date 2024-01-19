@@ -13,7 +13,7 @@ from subWindow1 import Ui_subWindow1   # 從subWindow1視窗引進Ui_subWindow (
 from subWindow2 import Ui_subWindow2   # 從subWindow2視窗引進Ui_subWindow (這個是subWindow2.py內的class)，以應用從QT Designer做好的介面
 
 ### create ======================================
-conn = psycopg2.connect(dbname = "house_test3", user="postgres", password="sunny123123") # 連結資料庫
+conn = psycopg2.connect(dbname = "", user="", password="") # 連結資料庫*
 sqlOp = conn.cursor() # 創造一指標操作database
 #sqlOp.close() # 關閉指標
 #conn.close()  # 關閉連結
