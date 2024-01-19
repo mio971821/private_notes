@@ -1,0 +1,23 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+
+<p class="text-center p-5"><font size="8" style="font-family: 'Zen Maru Gothic', sans-serif;">請選擇租屋系統</font></p>
+
+<div class="container" style="height:500px;">
+  <div class="position-absolute top-50 start-50 translate-middle">
+      <div class="row" style="margin-left:-80px;">
+        <div class="col">
+          <a type="button" class="button-33" href="{% url 'Tenant_a' %}">
+              一般租屋功能
+          </a>
+        </div>
+        <div class="col">
+          <a type="button" class="button-33" href="{% url 'Tenant_b' %}">
+              目的地多選功能<br>(適合中原學生)
+          </a>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock  %}

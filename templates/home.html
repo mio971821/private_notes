@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>中原租屋網</title>
+    <!--bootstrap, jQuery:ajax, my CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/statics/css/mycss.css">
+    
+    <!--google fonts CSS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500&display=swap" rel="stylesheet">
+    <!-- CSS animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- 雙點滑桿 -->
+    <link rel="stylesheet" href="/statics/css/nouislider.min.css">
+    <!-- google map API 已過期 -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZgvusoZLMa3yZYDsZCRK0vzHl93yOZPA&libraries=places"></script>
+  </head>
+  <body>
+    {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <!--start: navbar --> <!-- navbar-expand-md 在md(>768px)時展開；z-index表示層級(越高表示越上層顯示)-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark position-sticky top-0" style="z-index: 1000;">
+      <div class="container-fluid">
+        <a href="{% url 'Home' %}" class="d-flex align-items-center mb-2 me-5 mb-lg-0 text-white text-decoration-none">
+            <img src="{% static 'images/home-removebg.png' %}" width="150" height="50">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
+            <li class="nav-item col-6 col-md-auto"><a href="{% url 'Tenant' %}" type="button" class="btn btn-dark me-2 ">租屋</a></li>
+            <li class="nav-item col-6 col-md-auto"><a href="{% url 'Rent_choose' %}" type="button" class="btn btn-dark me-2 ">出租</a></li>
+            <li class="nav-item col-6 col-md-auto"><a href="{% url 'Analysis' %}" type="button" class="btn btn-dark me-2 ">分析</a></li>
+            <!--<li class="nav-item col-6 col-md-auto"><a href="{% url 'About' %}" type="button" class="btn btn-dark me-2 ">關於我們</a></li>-->
+          </ul>
+          <hr class="d-md-none text-white-50">
+          <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item col-6 col-md-auto">
+                <button type="button" class="btn btn-primary me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ request.user.last_name }} <!--username-->
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" data-bs-theme="dark">
+                    <li><a class="dropdown-item" href="#">會員資訊</a></li>
+                    <li><a class="dropdown-item" href="#">? 幫助 Q&A</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'Logout' %}">登出</a></li>
+                </ul>
+            </li>
+            {% else %}
+              <li class="nav-item col-6 col-md-auto"><a href="{% url 'Sign_in' %}" type="button" class="btn btn-outline-light me-2">登入</a></li>
+              <li class="nav-item col-6 col-md-auto"><a href="{% url 'Sign_up' %}" type="button" class="btn btn-info me-2">註冊</a></li>
+            {% endif %}
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %}
+    <style>
+        body {
+          background-color: #353535;
+        }
+    </style>
+    <!--首頁封面-->
+    <div class="" style="position: absolute; top: 100px; right: 40px;">
+        <div class="cloud-1"><img src="{% static 'images/cloud-1.png' %}" width="180" height="120"></div>
+    </div>
+    <div class="" style="position: absolute; top: 130px; left: 30px;">
+        <div class="cloud-2"><img src="{% static 'images/cloud-2.png' %}" width="160" height="100"></div>
+    </div>
+    <div class="" style="position: absolute; top: 300px; left: 120px;">
+        <div class="cloud-3"><img src="{% static 'images/cloud-3.png' %}" width="120" height="80"></div>
+    </div>
+
+    <div class="" style="display: flex; justify-content: center; margin:20px;">
+        <div class="animate__animated animate__bounceInDown"><img src="{% static 'images/home-removebg.png' %}" width="350" height="120"></div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; margin: 30px;">
+        <div><h1 class="animate-text-10w" style="animation-delay: 0.5s;">歡迎來到中原租屋網！</h1></div>
+        <div><h1 class="animate-text-16w" style="animation-delay: 1.5s;">這裡可以容易的找到中原的租屋處，</h1></div>
+        <div><h1 class="animate-text-16w" style="animation-delay: 3.5s;">並歡迎使用我們租屋的特色功能哦。</h1></div>
+        <div><h1 class="animate-text-7w" style="animation-delay: 5.5s;">想要貼紙快來按</h1></div>
+    </div>
+    <div style="display: flex; justify-content: center; margin: 20px;">
+        <a href="{% url 'Tenant' %}" type="button" class="button-33 px-4 me-sm-3 animate__animated animate__jackInTheBox" style="animation-delay: 5.5s;">去租屋</a>
+        <a href="{% url 'Rent_choose' %}" type="button" class="button-33 px-4 me-sm-3 animate__animated animate__jackInTheBox" style="animation-delay: 5.9s;">去出租</a>
+        <a href="{% url 'Analysis' %}" type="button" class="button-33 px-4 me-sm-3 animate__animated animate__jackInTheBox" style="animation-delay: 5.7s;">去分析</a>
+    </div>
+    
+    
+    <!--
+    <div class="container" style="">
+        <div class="px-4 pt-5 my-5 text-center">
+        <h1 class="display-4 fw-bold"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">歡迎來到中原租屋網</font></font></h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在這裡，你可以找到中原大學附近的租屋處，也可以分析附近租屋的資訊！</font></font></p>
+                    <div class="nav d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                    <li><a href="{% url 'Tenant' %}" type="button" class="btn btn-primary btn-lg px-4 me-sm-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">去租屋</font></font></a></li>
+                    <li><a href="{% url 'Analysis' %}" type="button" class="btn btn-warning btn-lg px-4 me-sm-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">去分析</font></font></a></li>
+                    <li><a href="{% url 'Rent_choose' %}" type="button" class="btn btn-light btn-lg px-4 me-sm-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">去出租</font></font></a></li>
+                    </div>
+            </div>
+        </div>
+    </div>-->
+    {% endblock  %}
+
+    <!--下欄-->
+    <!--
+    <footer class="homeFooter d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-muted">© 2023 Sarah_mio</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
+      <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+      <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+    </ul>
+    </footer>
+    -->
+    
+  </body>
+</html>

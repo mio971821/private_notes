@@ -1,0 +1,305 @@
+﻿{% extends 'home.html' %}
+{% load static %}
+
+{% block content %}
+                       <!----------------------------------------------房屋類型介紹---------------------------------------------->
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <div class="button-content">
+                <img src="{% static 'images/house_a.jpg' %}" alt="房子图像" width="107" height="93">
+                <span class="button-text">獨立套房</span>
+            </div>
+        </button>
+    </div>
+    <div class="col">
+        <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#2" aria-expanded="false" aria-controls="2">
+            <div class="button-content">
+                <img src="{% static 'images/house_b.jpg' %}" alt="房子图像" width="107" height="93">
+                <span class="button-text">分租套房</span>
+            </div>
+        </button>
+    </div>
+    <div class="col">
+        <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#3" aria-expanded="false" aria-controls="3">
+            <div class="button-content">
+                <img src="{% static 'images/house_c.jpg' %}" alt="房子图像" width="107" height="93">
+                <span class="button-text">雅房</span>
+            </div>
+        </button>
+    </div>
+    <div class="col">
+        <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#4" aria-expanded="false" aria-controls="4">
+            <div class="button-content">
+                <img src="{% static 'images/house_d.jpg' %}" alt="房子图像" width="107" height="93">
+                <span class="button-text">整層住家</span>
+            </div>
+         </button>
+     </div>
+  </div>
+</div>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body" style="cursor: default !important;">
+        <span class="house-title">獨立套房:</span>
+        <span class="house-point">Key:有獨立門牌與信箱。</span>
+        <span class="house-text">一個人一個房間，有獨立衛浴，租金比雅房、分租套房高。</span>
+     </div>
+</div>
+<div class="collapse" id="2">
+    <div class="card card-body" style="cursor: default !important;">
+        <span class="house-title">分租套房:</span>
+        <span class="house-point">Key:附有獨立衛浴。</span>
+        <span class="house-text">通常租金比雅房還高。</span>
+    </div>
+</div>
+<div class="collapse" id="3">
+    <div class="card card-body" style="cursor: default !important;">
+        <span class="house-title">雅房:</span>
+        <span class="house-point">Key:沒有衛浴(公共浴室)。</span>
+        <span class="house-text">
+            只有床和基本家具的房間，
+            具備睡覺和居住功能，
+            通常是所有分類最便宜的。
+        </span>
+    </div>
+</div>
+<div class="collapse" id="4">
+    <div class="card card-body" style="cursor: default !important;">
+        <span class="house-title">整層住家: </span>
+        <span class="house-point">Key:獨立門牌，空間比套房大。</span>
+        <span class="house-text">
+            有更多公共空間(客廳/廚房/陽台…)，
+            通常是所有分類租金最高。
+        </span>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        background-color: #fff !important;
+        transform: initial !important;
+        filter: initial !important;
+    }
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .button-content {
+        display: flex;
+        flex-direction: column; /* 將內容垂直改變 */
+        align-items: center;
+        justify-content: center; /* 居中對齊內容 */
+    }
+
+    .button-text {
+        font-size: 22px; /* 调整按钮文字的字体大小 */
+        font-family: Arial, sans-serif; /* 更改按钮文字的字体样式 */
+        margin-top: 5px;
+    }
+
+    .btn-custom {
+        background-color: #F4DBFF;
+        /* 其他按钮样式属性 */
+    }
+
+    .house-title {
+        background-color: #FFF8DC;
+        color: #0000FF; /* 更改文字颜色為藍色 */
+        font-weight: bold; /* 加粗字体 */
+        font-size: 22px;
+    }
+
+    .house-point {
+        background-color: #FFF8DC;
+        font-weight: bold; /* 加粗字体 */
+        font-size: 20px;
+    }
+
+    .house-text {
+        background-color: #FFF8DC;
+        font-size: 20px;
+    }
+</style>
+                       <!------------------------------------------------查詢系統------------------------------------------------>
+<div class="container" style="margin-top:20px;">
+    <h1>房屋分析功能</h1>
+    <div class="row">
+        <!-- A -->
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="category_a" class="form-label">欲了解縣市間租金差異，可選擇想分析的房型:</label>
+                <select id="category_a" name="category_a" class="form-select">
+                    <option value="獨立套房" {% if selected_category_a == '獨立套房' %}selected{% endif %}>獨立套房</option>
+                    <option value="分租套房" {% if selected_category_a == '分租套房' %}selected{% endif %}>分租套房</option>
+                    <option value="雅房" {% if selected_category_a == '雅房' %}selected{% endif %}>雅房</option>
+                    <option value="整層住家2房" {% if selected_category_a == '整層住家2房' %}selected{% endif %}>整層住家2房</option>
+                    <option value="整層住家3房" {% if selected_category_a == '整層住家3房' %}selected{% endif %}>整層住家3房</option>
+                    <option value="整層住家4房" {% if selected_category_a == '整層住家4房' %}selected{% endif %}>整層住家4房</option>
+                    <option value="整層住家5房" {% if selected_category_a == '整層住家5房' %}selected{% endif %}>整層住家5房</option>
+                    <option value="整層住家6房" {% if selected_category_a == '整層住家6房' %}selected{% endif %}>整層住家6房</option>
+                    <option value="整層住家7房" {% if selected_category_a == '整層住家7房' %}selected{% endif %}>整層住家7房</option>
+                    <option value="整層住家8房" {% if selected_category_a == '整層住家8房' %}selected{% endif %}>整層住家8房</option>
+                    <option value="整層住家9房" {% if selected_category_a == '整層住家9房' %}selected{% endif %}>整層住家9房</option>
+                </select>
+            </div>
+            <!-- 移除分析按鈕的表單提交 -->
+            <button id="queryAsubmit" type="button" value="queryA" class="btn btn-primary">分析</button>
+            <div class="mt-5">
+                <h2 id="selected_category_a" style="display: none;">{{ selected_category_a }}</h2>
+                <canvas id="rentalChart" width="400" height="200"></canvas>
+            </div>
+        </div> <!-- col_1 -->
+
+        <!-- B -->
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="category_b" class="form-label">欲了解房型間租金差異，可選擇想分析的縣市:</label>
+                <select id="category_b" name="category_b" class="form-select">
+                    <option disabled>---北部---</option>
+                    <option value="新北市" {% if selected_category_b == '新北市' %}selected{% endif %}>新北市</option>
+                    <option value="臺北市" {% if selected_category_b == '臺北市' %}selected{% endif %}>臺北市</option>
+                    <option value="基隆市" {% if selected_category_b == '基隆市' %}selected{% endif %}>基隆市</option>
+                    <option value="宜蘭縣" {% if selected_category_b == '宜蘭縣' %}selected{% endif %}>宜蘭縣</option>
+                    <option value="桃園市" {% if selected_category_b == '桃園市' %}selected{% endif %}>桃園市</option>
+                    <option value="新竹市" {% if selected_category_b == '新竹市' %}selected{% endif %}>新竹市</option>
+                    <option value="新竹縣" {% if selected_category_b == '新竹縣' %}selected{% endif %}>新竹縣</option>
+                    <option disabled>---中部---</option>
+                    <option value="苗栗縣" {% if selected_category_b == '苗栗縣' %}selected{% endif %}>苗栗縣</option>
+                    <option value="臺中市" {% if selected_category_b == '臺中市' %}selected{% endif %}>臺中市</option>
+                    <option value="彰化縣" {% if selected_category_b == '彰化縣' %}selected{% endif %}>彰化縣</option>
+                    <option value="雲林縣" {% if selected_category_b == '雲林縣' %}selected{% endif %}>雲林縣</option>
+                    <option value="南投縣" {% if selected_category_b == '南投縣' %}selected{% endif %}>南投縣</option>
+                    <option disabled>---南部---</option>
+                    <option value="嘉義市" {% if selected_category_b == '嘉義市' %}selected{% endif %}>嘉義市</option>
+                    <option value="嘉義縣" {% if selected_category_b == '嘉義縣' %}selected{% endif %}>嘉義縣</option>
+                    <option value="臺南市" {% if selected_category_b == '臺南市' %}selected{% endif %}>臺南市</option>
+                    <option value="高雄市" {% if selected_category_b == '高雄市' %}selected{% endif %}>高雄市</option>
+                    <option value="屏東縣" {% if selected_category_b == '屏東縣' %}selected{% endif %}>屏東縣</option>
+                    <option value="澎湖縣" {% if selected_category_b == '澎湖縣' %}selected{% endif %}>澎湖縣</option>
+                    <option disabled>---東部---</option>
+                    <option value="花蓮縣" {% if selected_category_b == '花蓮縣' %}selected{% endif %}>花蓮縣</option>
+                    <option value="臺東縣" {% if selected_category_b == '臺東縣' %}selected{% endif %}>臺東縣</option>
+                    <option disabled>---外島---</option>
+                    <option value="連江縣" {% if selected_category_b == '連江縣' %}selected{% endif %}>連江縣</option>
+                    <option value="金門縣" {% if selected_category_b == '金門縣' %}selected{% endif %}>金門縣</option>
+                </select>
+            </div>
+            <!-- 移除分析按鈕的表單提交 -->
+            <button id="queryBsubmit" type="button" value="queryB" class="btn btn-primary">分析</button>
+            <div class="mt-5">
+                <h2 id="selected_category_b" style="display: none;">{{ selected_category_b }}</h2>
+                <canvas id="rentalChart2" width="400" height="200"></canvas>
+            </div>
+        </div> <!-- col_2 -->
+    </div> <!--row-->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<script>
+    // 在外部先定義變數來保存圖表實例
+    var chartInstance1, chartInstance2;
+
+    // 修改 JavaScript 部分，使用 Ajax 處理按鈕點擊事件，並向後端發送請求
+    $(document).ready(function() {
+        // 在按鈕點擊事件中使用 Ajax
+        $("#queryAsubmit").click(function() {
+            var category_a = $("#category_a").val();
+            $.ajax({
+                type: "GET",
+                url: "{% url 'Analysis' %}",
+                data: {
+                    "category_a": category_a,
+                },
+                success: function(data) {
+                    // 銷毀已存在的圖表實例
+                    if (chartInstance1) {
+                        chartInstance1.destroy();
+                    }
+
+                    // 處理回傳的資料並更新圖表
+                    var ctx = document.getElementById('rentalChart').getContext('2d');
+                    chartInstance1 = drawChart(ctx, data.citynames, data.average_rents_a);
+
+                    // 更新標題
+                    $("#selected_category_a").text(data.selected_category_a).show();
+                },
+                error: function(xhr, status, error) {
+                    // 處理錯誤
+                }
+            });
+        });
+
+        // 在按鈕點擊事件中使用 Ajax
+        $("#queryBsubmit").click(function() {
+            var category_b = $("#category_b").val();
+            $.ajax({
+                type: "GET",
+                url: "{% url 'Analysis' %}",
+                data: {
+                    "category_b": category_b,
+                },
+                success: function(data) {
+                    // 銷毀已存在的圖表實例
+                    if (chartInstance2) {
+                        chartInstance2.destroy();
+                    }
+
+                    // 處理回傳的資料並更新圖表
+                    var ctx = document.getElementById('rentalChart2').getContext('2d');
+                    chartInstance2 = drawChart(ctx, data.objectnames, data.average_rents_b);
+
+                    // 更新標題
+                    $("#selected_category_b").text(data.selected_category_b).show();
+                },
+                error: function(xhr, status, error) {
+                    // 處理錯誤
+                }
+            });
+        });
+    });
+
+    // 將圖表繪製的程式碼封裝成一個函式，方便重複使用，並回傳圖表實例
+    function drawChart(ctx, labels, data) {
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '平均月租金',
+                    data: data,
+                    backgroundColor: '#ffe8c8',
+                    borderColor: '#e5d1b6',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(0); // 顯示小數點位
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+
+
+{% endblock  %}

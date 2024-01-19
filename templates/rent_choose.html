@@ -1,0 +1,22 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+{% load static %}
+<p class="text-center p-5"><font size="8" style="font-family: 'Zen Maru Gothic', sans-serif;">請選擇您要出租的房型</font></p>
+
+<div class="row row-cols-1 row-cols-sm-2 g-4">
+    <div class="col d-flex justify-content-center align-items-center">
+        <!--<img src="{% static 'images/house_a-removebg.png' %}" class="" alt="..." width="150" height="50">-->
+        <a type="button" class="button-53" href="{% url 'Rent_a' %}">雅房</a>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+        <a type="button" class="button-53" href="{% url 'Rent_b' %}">分租套房</a>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+        <a type="button" class="button-53" href="{% url 'Rent_c' %}">獨立套房</a>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+        <a type="button" class="button-53" href="{% url 'Rent_d' %}">整層住家</a>
+    </div>
+</div>
+{% endblock  %}

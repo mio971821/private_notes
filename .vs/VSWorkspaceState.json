@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\statics",
+    "\\statics\\css",
+    "\\statics\\javaScript",
+    "\\templates",
+    "\\webproject",
+    "\\welcome",
+    "\\welcome\\migrations"
+  ],
+  "SelectedNode": "\\welcome\\views.py",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,0 +1,37 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+    <!--登入modal-->
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+      <div class="row align-items-center g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+          <h1 class="fw-bold mb-0 fs-2">登入</h1>
+          <p class="col-lg-10 fs-4">Login</p>
+        </div>
+          <div class="col-md-10 mx-auto col-lg-5">
+            <!-- form讓用戶端(Client)傳送資料到Django的後台，並讓Django可以在後台操作這些資料-->
+            <!-- submit時，吃的參數是name，form會把name拿來當參數的key值，所以沒有name，這筆參數就不會被送到後端 -->
+            <!-- 而id是javascript用來操控方便使用而已，並不會影響到要傳送到後端的參數。-->
+            <!-- {% csrf_token %} : django 內建預設的 authentication 方法-->
+            <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" method="POST"> {% csrf_token %}
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control rounded-3" id="floatingInput" name="email" placeholder="name@example.com" required>
+                <label for="floatingInput">Email</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-3" id="floatingPassword" name="password" placeholder="password" required>
+                <label for="floatingPassword">密碼</label>
+              </div>
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+              <!--按下這個submit送出按鈕就可以把文字送到後端-->
+              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" value="Submit">登入</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock  %}
+

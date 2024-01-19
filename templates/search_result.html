@@ -1,0 +1,48 @@
+﻿{% extends 'home.html' %}
+
+{% load static %}
+{% block content %}
+<!-- search_result.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索结果</title>
+    <!-- 可以在这里引入CSS样式表等 -->
+</head>
+<body>
+    <h1>搜索结果</h1>
+
+    <div id="house-list">
+        <!-- 使用JavaScript动态添加房屋信息 -->
+    </div>
+
+    <script>
+        // 获取从服务器返回的JSON数据
+        var filteredHouses = JSON.parse('{{ request.session.filtered_houses|escapejs }}');
+
+        // 在页面上显示房屋信息
+        var houseListDiv = document.getElementById('house-list');
+        if (filteredHouses.length > 0) {
+            for (var i = 0; i < filteredHouses.length; i++) {
+                var house = filteredHouses[i];
+                var houseDiv = document.createElement('div');
+                houseDiv.innerHTML = `
+                    <h2>房屋名稱: 桃園市 - ${house.town}</h2>
+                    <p>月租金: ${house.money}</p>
+                    <p>地點: ${house.place}</p>
+                `;
+                houseListDiv.appendChild(houseDiv);
+            }
+        } else {
+            houseListDiv.innerHTML = '<p>没有符合条件的房屋。</p>';
+        }
+    </script>
+
+    <!-- 可以在这里引入其他JavaScript文件等 -->
+
+</body>
+</html>
+
+{% endblock  %}

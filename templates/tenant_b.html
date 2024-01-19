@@ -1,0 +1,1003 @@
+﻿{% extends 'home.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image and Points Scaling</title>
+    <link rel="stylesheet" href="/statics/css/test.css">
+    <script src="/statics/javaScript/script.js" charset="UTF-8"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入 Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZgvusoZLMa3yZYDsZCRK0vzHl93yOZPA&libraries=geometry&callback=initializeMap" async defer></script>
+
+</head>
+<body>
+
+    <div class="container" id="container">
+
+        <img id="image" src="{% static 'images/中原大學校園地圖.jpg' %}" alt="Sample Image" usemap="#image-map">
+        <div class="pointA">
+            <input type="checkbox" id="pointA">
+        </div>
+        <div class="pointB">
+            <input type="checkbox" id="pointB">
+        </div>
+        <div class="pointC">
+            <input type="checkbox" id="pointC">
+        </div>
+        <div class="pointD">
+            <input type="checkbox" id="pointD">
+        </div>
+        <div class="pointE">
+            <input type="checkbox" id="pointE">
+        </div>
+        <div class="pointF">
+            <input type="checkbox" id="pointF">
+        </div>
+        <div class="pointG">
+            <input type="checkbox" id="pointG">
+        </div>
+        <div class="pointH">
+            <input type="checkbox" id="pointH">
+        </div>
+        <div class="pointI">
+            <input type="checkbox" id="pointI">
+        </div>
+        <div class="pointJ">
+            <input type="checkbox" id="pointJ">
+        </div>
+        <div class="pointK">
+            <input type="checkbox" id="pointK">
+        </div>
+        <div class="pointL">
+            <input type="checkbox" id="pointL">
+        </div>
+        <div class="pointM">
+            <input type="checkbox" id="pointM">
+        </div>
+        <div class="pointN">
+            <input type="checkbox" id="pointN">
+        </div>
+        <div class="pointO">
+            <input type="checkbox" id="pointO">
+        </div>
+        <div class="pointP">
+            <input type="checkbox" id="pointP">
+        </div>
+        <div class="pointQ">
+            <input type="checkbox" id="pointQ">
+        </div>
+        <div class="pointR">
+            <input type="checkbox" id="pointR">
+        </div>
+        <div class="pointS">
+            <input type="checkbox" id="pointS">
+        </div>
+        <div class="pointT">
+            <input type="checkbox" id="pointT">
+        </div>
+        <div class="pointU">
+            <input type="checkbox" id="pointU">
+        </div>
+        <div class="pointV">
+            <input type="checkbox" id="pointV">
+        </div>
+        <div class="pointW">
+            <input type="checkbox" id="pointW">
+        </div>
+        <div class="pointX">
+            <input type="checkbox" id="pointX">
+        </div>
+        <div class="pointY">
+            <input type="checkbox" id="pointY"> 中壢火車站
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/train.jpg' %}" alt="房子图像" width="55" height="53">
+        </div>
+        <div class="pointZ">
+            <input type="checkbox" id="pointZ"> 中大撞球俱樂部
+            <img src="{% static 'images/pool ball.jpg' %}" alt="房子图像" width="130" height="53">
+        </div>
+        <div class="pointAA">
+            <input type="checkbox" id="pointAA"> 大潤發-中壢店
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/RT-MART.png' %}" alt="房子图像" width="130" height="53">
+        </div>
+        <div class="pointAB">
+            <input type="checkbox" id="pointAB"> 中油中壢環中站
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/Gas station.jpg' %}" alt="房子图像" width="55" height="53">
+        </div>
+        <div class="pointAC">
+            <input type="checkbox" id="pointAC"> 家樂福中壢店
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/carrefour.png' %}" alt="房子图像" width="65" height="53">
+        </div>
+        <div class="pointAD">
+            <input type="checkbox" id="pointAD"> 家樂福中原店
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/carrefour.png' %}" alt="房子图像" width="65" height="53">
+        </div>
+        <div class="pointAE">
+            <input type="checkbox" id="pointAE"> 中原國小停車場
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/ParkingLot.jpg' %}" alt="房子图像" width="55" height="53">
+        </div>
+        <div class="pointAF">
+            <input type="checkbox" id="pointAF"> 大魯閣
+
+            <img src="{% static 'images/大魯閣.png' %}" alt="房子图像" width="120" height="53">
+        </div>
+        <div class="pointAG">
+            <input type="checkbox" id="pointAG"> 大樹藥局
+            <br> <!-- 可以加入換行，使圖片在文字下面 -->
+            <img src="{% static 'images/pharmacy.jpg' %}" alt="房子图像" width="55" height="53">
+        </div>
+
+
+
+    </div>
+    <div id="loading-spinner" class="spinner-border text-primary position-fixed top-50 start-50" role="status" style="z-index:1000; display: none;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <button id="calculateButton" onclick="calculateDistances()">計算距離</button>
+    <!-- 這裡是用來顯示計算結果的區域 -->
+    <!-- 篩選欄 -->
+    <div class="w-100 position-fixed d-flex justify-content-center align-items-center text-center" id="select" style="z-index: 900;">
+        <div class="col-12 col-md-9">
+            <!-- md(>=768px)時佔col-6，否則佔col-12 -->
+            <div class="collapse collapsing" id="collapseExample">
+                <div class="condition-box">
+                    <!-- 篩選條件 -->
+                    <div class="row">
+                        <div class="col-3 label_frame">
+                            房型
+                        </div>
+                        <div class="col-9 options_frame">
+                            <ul class="row">
+                                <li class="col option hos-option selected" id="hos_type0" data-type="房型" data-value="不限">不限</li>
+                                <li class="col option hos-option" id="hos_type1" data-type="房型" data-value="整層住家">整層住家</li>
+                                <li class="col option hos-option" id="hos_type2" data-type="房型" data-value="獨立套房">獨立套房</li>
+                                <li class="col option hos-option" id="hos_type3" data-type="房型" data-value="分租套房">分租套房</li>
+                                <li class="col option hos-option" id="hos_type4" data-type="房型" data-value="雅房">雅房</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 0px;">
+
+                    <div class="row">
+                        <div class="col-3 label_frame">
+                            建築類型
+                        </div>
+                        <div class="col-9 options_frame">
+                            <ul class="row">
+                                <li class="col option build-option selected" id="build_type0" data-type="建築類型" data-value="不限">不限</li>
+                                <li class="col option build-option" id="build_type1" data-type="建築類型" data-value="公寓">公寓</li>
+                                <li class="col option build-option" id="build_type2" data-type="建築類型" data-value="電梯大樓">電梯大樓</li>
+                                <li class="col option build-option" id="build_type3" data-type="建築類型" data-value="透天厝">透天厝</li>
+                                <li class="col option build-option" id="build_type4" data-type="建築類型" data-value="別墅">別墅</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 0px;">
+
+                    <div class="row" style="height:90px;">
+                        <div class="col-3 label_frame">
+                            租金範圍<br>(元)
+                        </div>
+                        <div class="col-9 options_frame" style="display: flex; justify-content: center;">
+                            <div id="rent_range" style="width: 70%; margin-left: 50px;"></div>
+                            <div id="pips-range" style="margin-left: 30px;"></div>
+                            <div class="col option equ-option" id="money_20000" data-value="20000">20000以上</div>
+                            <button class="button-search" id="update-button" style="position: absolute; left: 85%; bottom: 10%;">更新</button>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 0px;">
+
+                    <div id="roomField">
+                        <div class="row">
+                            <div class="col-3 label_frame">
+                                房數
+                            </div>
+                            <div class="col-9 options_frame" style="display: flex;">
+                                <select id="格局_房數" style="margin-left: 40px;" onchange="updateSelectOption('格局_房數')">
+                                    <option value="不限">不限</option>
+                                    <option value="1">1房</option>
+                                    <option value="2">2房</option>
+                                    <option value="3">3房</option>
+                                    <option value="4">4房</option>
+                                    <option value="5">5房</option>
+                                    <option value="6">6房</option>
+                                    <option value="7">7房</option>
+                                    <option value="8">8房</option>
+                                    <option value="9">9房</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr style="margin: 0px;">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 label_frame">
+                            設備
+                        </div>
+                        <div class="col-9 options_frame">
+                            <ul class="row" style="margin-bottom:0px !important;">
+                                <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                                <li class="row-style-1">
+                                    室內窗：
+                                    <div class="option other-option radioType" data-type="室內窗類型" data-value="一般" style="width:40px !important;">一般</div>
+                                    <div class="option other-option radioType" data-type="室內窗類型" data-value="氣密" style="width:40px !important;">氣密</div>
+                                </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                冷氣：
+                                <div class="option other-option radioType" data-type="冷氣類型" data-value="窗型" style="width:40px !important;">窗型</div>
+                                <div class="option other-option radioType" data-type="冷氣類型" data-value="變頻" style="width:40px !important;">變頻</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                洗衣機：
+                                <div class="option other-option radioType" data-type="洗衣機類型" data-value="獨立" style="width:40px !important;">獨立</div>
+                                <div class="option other-option radioType" data-type="洗衣機類型" data-value="共用" style="width:40px !important;">共用</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                烘衣機：
+                                <div class="option other-option radioType" data-type="烘衣機類型" data-value="一般" style="width:40px !important;">獨立</div>
+                                <div class="option other-option radioType" data-type="烘衣機類型" data-value="氣密" style="width:40px !important;">共用</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                冰箱：
+                                <div class="option other-option radioType" data-type="冰箱類型" data-value="獨立" style="width:40px !important;">獨立</div>
+                                <div class="option other-option radioType" data-type="冰箱類型" data-value="共用" style="width:40px !important;">共用</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                插座數：
+                                <select id="插座數" onchange="updateSelectOption('插座數')">
+                                    <option value="不限">不限</option>
+                                    <option value="1">1以上</option>
+                                    <option value="2">2以上</option>
+                                    <option value="3">3以上</option>
+                                    <option value="4">4以上</option>
+                                    <option value="5">5以上</option>
+                                    <option value="6">6以上</option>
+                                    <option value="7">7以上</option>
+                                    <option value="8">8以上</option>
+                                </select>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_電梯" data-value="True">有電梯</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_熱水器" data-value="True">有熱水器</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_天然瓦斯" data-value="True">有天然瓦斯</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_電視" data-value="True">有電視</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_第四台" data-value="True">有第四台</div>
+                            </li>
+                        </div>
+                        <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-2">
+                                <div class="option other-option" data-type="提供設備_網路" data-value="True">有網路</div>
+                            </li>
+                        </div>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr style="margin: 0px;">
+
+                <div class="row">
+                    <div class="col-3 label_frame">
+                        特殊需求
+                    </div>
+                    <div class="col-9 options_frame">
+                        <ul class="row" style="margin-bottom:0px !important;">
+                            <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                            <li class="row-style-1">
+                                電費：
+                                <div class="option other-option radioType" data-type="電費類型" data-value="台電" style="width:40px !important;">台電</div>
+                                <div class="option other-option radioType" data-type="電費類型" data-value="自訂" style="width:40px !important;">自訂</div>
+                            </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-1">
+                            水費：
+                            <div class="option other-option radioType" data-type="水費類型" data-value="台水" style="width:40px !important;">台水</div>
+                            <div class="option other-option radioType" data-type="水費類型" data-value="自訂" style="width:40px !important;">自訂</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="提供停車位" data-value="True">有停車位</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="刊登者類型" data-value="屋主">屋主刊登</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="有寵物限制" data-value="True">可寵</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="是否可伙" data-value="True">可伙</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="性別限制" data-value="男性">限男性</div>
+                        </li>
+                    </div>
+                    <div class="col-6 col-lg-4 col-xl-3 mb-1" style="padding:5px !important;">
+                        <li class="row-style-2">
+                            <div class="option other-option" data-type="性別限制" data-value="女性">限女性</div>
+                        </li>
+                    </div>
+                    </ul>
+                </div>
+            </div>
+
+            <!--<button class="button-search" id="search-button" style="position: relative; left: 12%;">查詢</button>-->
+        </div>
+    </div>
+
+    <button class="button-39" id="DropdownButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" aria-label="Toggle navigation" style="display: none;">︾</button>
+    </div>
+    </div>
+
+    <button class="order_up button-order" id="order_money" type="button" style="z-index: 900; position: fixed; right: 3%; top: 20%; display: none;" onclick="toggleOrderClass()">價格升序</button>
+    <div id="card-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" style="margin: 40px; display: none;"></div>
+    <!--合租互動介面modal-->
+    <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+       <!--         <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="contactInfo">
+                     聯絡人資訊會在這裡動態生成 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="joinLeaveButton">我要加入</button>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <script src="/statics/javaScript/nouislider.min.js"></script>
+    <script>
+
+
+        function showLoadingOverlay() {
+            // 显示加载状态的覆盖层
+
+            $("#loading-spinner").show();
+
+        }
+
+        function hideLoadingOverlay() {
+            // 隐藏加载状态的覆盖层
+
+            $("#loading-spinner").hide();
+
+        }
+
+        function showResult() {
+            // 隐藏原始内容
+            $("#calculateButton, #result").hide();
+            // 显示计算结果
+            // 这里可以根据实际情况更新显示计算结果的内容
+
+
+
+        }
+
+        function calculateDistances() {
+            // 隐藏原始内容
+            $("#calculateButton, #result").hide();
+
+            $("#container").hide();
+            // 显示加载状态
+            showLoadingOverlay();
+
+            $("#card-container").show();
+
+            calculateDistance()
+            // 模拟异步请求（可以替换为实际的异步请求）
+            setTimeout(function () {
+                // 模拟计算结果
+                // 这里可以根据实际情况更新显示计算结果的内容
+                showResult();
+
+                // 隐藏加载状态
+                //hideLoadingOverlay();
+            }, 10); // 这里使用 setTimeout 模拟异步请求的延迟
+
+
+        }
+
+        // 定義一個全局變數來保存當前的篩選條件
+        let currentFilters = {
+            房型: ['不限'],
+            建築類型: ['不限'],
+            價格: [5000, 10000],
+            格局_房數: '不限',
+            插座數: '不限'
+        };
+
+        //sendQuery();    // 載入頁面先進行一次初始化查詢
+        // ----------------------------------------------------------------------------
+        // 篩選條件框
+        document.getElementById("DropdownButton").addEventListener("click", function () {
+            if (this.innerHTML === "︾") {
+                this.innerHTML = "︽";
+            } else {
+                this.innerHTML = "︾";
+            }
+        });
+
+        // selected及查詢-可多選，Filters為list類型
+        function addSelected_list(option) {
+            let index = currentFilters[option.dataset.type].indexOf(option.dataset.value);
+            if (index == -1) {  // 沒找到再新增
+                option.classList.add('selected');
+                currentFilters[option.dataset.type].push(option.dataset.value);
+                sendQuery();
+            }
+            // currentFilters[option.dataset.type] = option.dataset.value;
+        }
+        function removeSelected_list(option) {
+            let index = currentFilters[option.dataset.type].indexOf(option.dataset.value);
+            if (index != -1) {  // 找到再移除
+                option.classList.remove('selected');
+                currentFilters[option.dataset.type].splice(index, 1);  // 刪除指定 index 位置的元素
+            }
+            //delete currentFilters[option.dataset.type];  // {房型: '不限', 建築類型: '電梯大樓'} -> {房型: '不限'}
+        }
+
+        // selected及查詢-不可多選，Filters為單值
+        function addSelected(option) {
+            option.classList.add('selected');
+            currentFilters[option.dataset.type] = option.dataset.value;
+            sendQuery();
+        }
+        function removeSelected(option) {
+            option.classList.remove('selected');
+            delete currentFilters[option.dataset.type];  // {房型: '不限', 建築類型: '電梯大樓'} -> {房型: '不限'}
+        }
+
+        // 篩選條件的選項 hos-option -------------------------------------------
+        const hos_options = document.querySelectorAll('.hos-option');
+        const hos_option_0 = document.getElementById('hos_type0');
+        const hos_option_1 = document.getElementById('hos_type1');
+        const hos_option_2 = document.getElementById('hos_type2');
+        const hos_option_3 = document.getElementById('hos_type3');
+        const hos_option_4 = document.getElementById('hos_type4');
+        const roomCount = document.getElementById('room_count');
+        const roomField = document.getElementById('roomField');
+
+        hos_options.forEach(option => {
+            option.addEventListener('click', () => {
+                // 選擇不限，則其他選項清除；選擇其他選項:若原本非選中，則選中。若原本為選中，則刪除選中。
+                if (option === hos_option_0) {
+                    removeSelected_list(hos_option_1);
+                    removeSelected_list(hos_option_2);
+                    removeSelected_list(hos_option_3);
+                    removeSelected_list(hos_option_4);
+                    addSelected_list(hos_option_0)
+                } else if (!option.classList.contains('selected')) {
+                    removeSelected_list(hos_option_0);
+                    addSelected_list(option)
+                } else if (option.classList.contains('selected')) {
+                    removeSelected_list(option);
+                    // 檢查是否所有 hos_options 都沒有被選中
+                    const noOptionSelected = [...hos_options].every(opt => !opt.classList.contains('selected'));
+                    if (noOptionSelected) {
+                        addSelected_list(hos_option_0);
+                    }
+
+                    sendQuery();
+                }
+
+                // 選不限或整層，房數可選；反之則不可選
+                const isUnlimitedOption = hos_option_0.classList.contains('selected'); // 不限
+                const isEntireHomeSelected = hos_option_1.classList.contains('selected'); // 整層住家
+
+                if (isUnlimitedOption || isEntireHomeSelected) {
+                    roomField.style.display = 'block'; // 顯示
+                } else {
+                    roomField.style.display = 'none'; // 隱藏
+                    roomCount.value = 1;
+                }
+            });
+        });
+
+        // 篩選條件的選項 build-option -------------------------------------------
+        const build_options = document.querySelectorAll('.build-option');
+        const build_option_0 = document.getElementById('build_type0');
+        const build_option_1 = document.getElementById('build_type1');
+        const build_option_2 = document.getElementById('build_type2');
+        const build_option_3 = document.getElementById('build_type3');
+        const build_option_4 = document.getElementById('build_type4');
+
+        build_options.forEach(option => {
+            option.addEventListener('click', () => {
+                // 選擇不限，則其他選項清除；選擇其他選項:若原本非選中，則選中。若原本為選中，則刪除選中。
+                if (option === build_option_0) {
+                    removeSelected_list(build_option_1);
+                    removeSelected_list(build_option_2);
+                    removeSelected_list(build_option_3);
+                    removeSelected_list(build_option_4);
+                    addSelected_list(build_option_0)
+                } else if (!option.classList.contains('selected')) {
+                    removeSelected_list(build_option_0);
+                    addSelected_list(option)
+                } else if (option.classList.contains('selected')) {
+                    removeSelected_list(option);
+                    // 檢查是否所有 build_options 都沒有被選中
+                    const noOptionSelected = [...build_options].every(opt => !opt.classList.contains('selected'));
+                    if (noOptionSelected) {
+                        addSelected_list(build_option_0);
+                    }
+
+                    sendQuery();
+                }
+            });
+        });
+
+        // 篩選條件的選項 other-option -------------------------------------------
+        const other_options = document.querySelectorAll('.other-option');
+        other_options.forEach(option => {
+            option.addEventListener('click', () => {
+                if (!option.classList.contains('selected')) {  // 此選項非選中，我要讓選項選中
+                    if (option.classList.contains('radioType')) {  // 選中前先移除同data type的選項的選中狀態
+                        const dataType = option.getAttribute('data-type');
+
+                        // 移除相同 data-type 的選項選中狀態
+                        const optionsWithSameType = document.querySelectorAll(`.other-option[data-type="${dataType}"]`);
+                        optionsWithSameType.forEach(otherOption => {
+                            if (otherOption !== option) {
+                                removeSelected(otherOption);
+                            }
+                        });
+                    }
+
+                    addSelected(option)
+                } else if (option.classList.contains('selected')) {  // 此選項選中，我要讓選項非選中
+                    removeSelected(option);
+                    sendQuery();
+                }
+            });
+        });
+
+        // ****設置2點滑桿****
+
+        // 取得滑桿元素
+        var rent_range = document.getElementById('rent_range');
+
+        // 使用noUiSlider創建滑桿
+        noUiSlider.create(rent_range, {
+            range: {
+                'min': 0,
+                'max': 20000
+            },
+            start: [5000, 10000],  // 起始
+            step: 2500,  // 每一刻度
+            margin: 2500,  // 兩點間最小範圍
+            connect: true,
+            pips: {
+                mode: 'steps',
+                density: 16
+            }
+        });
+
+        // 刻度顯示紅色(添加CSS:active-pip)
+        var activePips = [null, null];
+
+        // 滑桿更新事件
+        rent_range.noUiSlider.on('update', function (values, handle) {
+            // handle==0:左控制點、handle==1:右控制點
+            // 移除目前pip的active class
+            if (activePips[handle]) {
+                activePips[handle].classList.remove('active-pip');
+            }
+
+            // 將值格式化為pip的格式
+            var dataValue = Math.round(values[handle]);
+
+            // 找到匹配值的pip
+            activePips[handle] = rent_range.querySelector('.noUi-value[data-value="' + dataValue + '"]');
+
+            // 添加active class
+            if (activePips[handle]) {
+                activePips[handle].classList.add('active-pip');
+            }
+
+            // 右控制點更新，移除"20000以上"的選擇
+            if (handle === 1) {   // === 嚴格相等運算符，值和"類型"都必須相等
+                document.getElementById('money_20000').classList.remove('selected');
+            }
+        });
+
+        // 刻度可按
+        var pips = rent_range.querySelectorAll('.noUi-value');
+
+        function clickOnPip() {
+            var value = Number(this.getAttribute('data-value'));
+            var currentValues = rent_range.noUiSlider.get();  //[0][1]
+
+            // 判斷是左邊點還是右邊點: Math.abs()獲取絕對值；currentValues[0]左值、currentValues[1]右值、value當前值
+            var isLeftHandle = Math.abs(currentValues[0] - value) < Math.abs(currentValues[1] - value);
+
+            // 根據判斷移動相應的點
+            if (isLeftHandle) {
+                rent_range.noUiSlider.set([value, currentValues[1]]);
+            } else {
+                rent_range.noUiSlider.set([currentValues[0], value]);
+            }
+        }
+
+        for (var i = 0; i < pips.length; i++) {
+            // For this example. Do this in CSS!
+            pips[i].style.cursor = 'pointer';
+            pips[i].addEventListener('click', clickOnPip);
+        }
+
+        // 點選id為money_20000的元素，設置滑桿右點值為20000
+        document.getElementById('money_20000').addEventListener('click', function () {
+            if (document.getElementById('money_20000').classList.contains('selected')) {
+                document.getElementById('money_20000').classList.remove('selected');
+            }
+            else {
+                var currentValues = rent_range.noUiSlider.get();  //[0][1]
+                rent_range.noUiSlider.set([currentValues[0], 20000]);
+                document.getElementById('money_20000').classList.add('selected');
+            }
+        });
+
+        // 點擊 #update-button 按鈕的事件處理
+        document.getElementById('update-button').addEventListener('click', function () {
+            var currentValues = rent_range.noUiSlider.get().map(value => Math.round(value));  // 將每個值四捨五入為整數  // [0][1]
+
+            if (document.getElementById('money_20000').classList.contains('selected')) {
+                // 若 #money_20000 被選中，將 currentValues[0],currentValues[1],"以上" 加入 currentFilters
+                currentFilters['價格'] = [...currentValues, '以上'];  // ... 是展開運算符，將陣列中的元素展開
+            } else {
+                // 若 #money_20000 未被選中，將滑桿的兩個值加入 currentFilters
+                currentFilters['價格'] = currentValues;
+            }
+
+            sendQuery();   // 執行篩選
+        });
+
+        function updateSelectOption(id) {
+            var selectElement = document.getElementById(id);
+            currentFilters[id] = selectElement.value;
+            sendQuery();
+        }
+
+        // 處理創建卡片的圖片幻燈片------------------------------------------------------
+        function generateCarouselIndicators(data, carouselId) {
+            // 去除字符串中的方括號和單引號，然後使用 split 分割為數組
+            const imagePaths = data.圖片路徑.replace(/[\[\]']+/g, '').split(', ');
+            if (data.來源平台 === '中原租屋網' && imagePaths.length > 0) {
+                return imagePaths.map((_, index) => `
+                  <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${index}"${index === 0 ? ' class="active"' : ''} aria-label="Slide ${index + 1}"></button>
+                `).join('');
+            } else if (data.來源平台 === '591' && imagePaths.length > 0) {
+                return imagePaths.map((_, index) => `
+                  <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${index}"${index === 0 ? ' class="active"' : ''} aria-label="Slide ${index + 1}"></button>
+                `).join('');
+            }
+
+            return '';
+        }
+
+        const MEDIA_URL = "{% static 'uploadFile/' %}";
+        function generateCarouselItems(data) {
+            // 去除字符串中的方括號和單引號，然後使用 split 分割為數組
+            const imagePaths = data.圖片路徑.replace(/[\[\]']+/g, '').split(', ');
+            if (data.來源平台 === '中原租屋網' && imagePaths.length > 0) {
+                return imagePaths.map((imagePath, index) => `
+              <div class="carousel-item${index === 0 ? ' active' : ''}">
+                <img src="${MEDIA_URL}houseFile/${imagePath}" class="d-block w-100" alt="..." style="width: 228.5px; height: 179.2px;">
+              </div>
+            `).join('');
+            } else if (data.來源平台 === '591' && imagePaths.length > 0) {
+                return imagePaths.map((imagePath, index) => `
+              <div class="carousel-item${index === 0 ? ' active' : ''}">
+                <img src="${imagePath}" class="d-block w-100" alt="..." style="width: 228.5px; height: 179.2px;">
+              </div>
+            `).join('');
+            }
+            return '';
+        }
+
+        function createCard(data, delay, index) {
+            const cardContainer = document.getElementById("card-container");
+            const col = document.createElement("div");
+            col.className = "col";
+            from591 = "來自591租屋網";
+
+            // 新增超連結
+            const cardLink = document.createElement("a");
+            if (data.來源平台 === '中原租屋網') {
+                const itemDetailUrl = "{% url 'Item_detail' item_id='placeholder' %}".replace('placeholder', data.id);
+                cardLink.href = itemDetailUrl; // 設定連結的目標 URL
+                from591 = "";
+            }
+            else if (data.來源平台 === '591') {
+                const url591 = `https://rent.591.com.tw/home/${data.來源編號}`;
+                cardLink.href = url591; // 設定連結的目標 URL
+            }
+            cardLink.target = "_blank"; // 開啟新分頁
+            cardLink.className = "card h-100 animate__animated animate__fadeInLeft";
+            cardLink.style = `animation-delay: ${delay}s; text-decoration: none; color: inherit;`;
+
+            // 生成唯一ID
+            const carouselId = `carousel-${index + 1}`; // 生成唯一的 ID
+            // 放置合租圖示
+            let additionalContent = "";
+            if (data.房型 === "整層住家" && data.格局_房數 > 1) {
+                additionalContent = `
+              <button class="together-button"></button>
+              <h6 class="card-text position-absolute" style="bottom: 42px;"><b><u>合租缺${data.合租缺額}位</u></b></h6>
+            `;
+            }
+            // 填充卡片內容
+            cardLink.innerHTML = `
+            <!--<button class="heart-button"></button>-->
+            <!--<button class="slash-button"></button>-->
+            <div id="${carouselId}" class="carousel slide card-img-top" data-bs-interval="false">
+              <div class="carousel-indicators">
+                ${generateCarouselIndicators(data, carouselId)}
+              </div>
+              <div class="carousel-inner" style="">
+                ${generateCarouselItems(data)}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title"><b>${data.廣告標題}</b></h5>
+              <hr>
+              <p class="card-text">${data.房型} / ${data.坪數}坪 / ${data.樓層}樓</p>
+              <p class="card-text">${data.地址}</p>
+              <p class="card-text">符合地點共:${data.符合點}個</p>
+              <p class="card-text" style="background-color: yellow; position: absolute; right: 5%">${from591}</p>
+              <p class="card-text">總距離:${data.總距離}公尺</p>
+              ${additionalContent}
+              <br>
+              <h5 class="card-text position-absolute" style="right: 10px; bottom: 10px;"><font color="#FF7A3F"><b>${data.價格}元/月</b></font></h5>
+              <br>
+            </div>
+          `;
+
+            // 將事件監聽器動態添加到together-button
+            const togetherButton = cardLink.querySelector('.together-button');
+            if (togetherButton) {
+                togetherButton.addEventListener('click', (event) => {
+                    showContactInfo(event, data.id);
+                });
+            }
+            // 將連結附加到容器中
+            col.appendChild(cardLink);
+
+            // 將列附加到容器中
+            cardContainer.appendChild(col);
+        }
+
+        // 篩選選項進行SQL查詢
+        function sendQuery() {
+            const orderButton = document.getElementById("order_money");
+            const orderType = orderButton.classList.contains("order_up") ? 'asc' : 'desc';
+            var DropdownButtonDiv = document.getElementById('DropdownButton');
+
+            // 檢查 div 是否可見
+            var divIsVisible = window.getComputedStyle(DropdownButton).display !== 'none';
+            if (divIsVisible) $('#loading-spinner').show();
+
+            // 發送Ajax請求
+            $.ajax({
+                type: "GET",
+                url: "{% url 'Tenant_a' %}",
+                data: { ...currentFilters, order_type: orderType },  // 將排序狀態添加到data對象中
+            })
+                .done(function (data) {
+                    // 成功時的處理
+                    const cardContainer = document.getElementById("card-container");
+                    cardContainer.innerHTML = '';
+
+                    if (data.query_result) {
+                        data.query_result.forEach((item, index) => {
+                            const delay = index * 0.1;
+                            createCard(item, delay, index);
+                        });
+                    }
+
+                    $('#loading-spinner').hide();  // 隱藏 Spinner
+                })
+                .fail(function (xhr, status, error) {
+                    // 失敗時的處理
+                    $('#loading-spinner').hide();  // 隱藏 Spinner
+                });
+        }
+
+        function toggleOrderClass() {
+            const orderButton = document.getElementById("order_money");
+
+            if (orderButton.classList.contains("order_up")) {
+                orderButton.classList.remove("order_up");
+                orderButton.classList.add("order_down");
+                orderButton.textContent = "價格降序";
+            } else {
+                orderButton.classList.remove("order_down");
+                orderButton.classList.add("order_up");
+                orderButton.textContent = "價格升序";
+            }
+
+            sendQuery();
+        }
+
+        function showContactInfo(event, houseid) {
+            event.stopPropagation(); // 阻止事件冒泡
+            event.preventDefault();  // 阻止默認行為，避免父元素的Card超連結
+
+            $('#loading-spinner').show();
+            var isUserLoggedIn = {% if request.user.is_authenticated %} true{% else %} false{% endif %};
+        if (!isUserLoggedIn) {
+            alert("尚未登入，無法使用合租功能！");
+            window.location.href = "{% url 'Sign_in' %}";
+        } else {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'GroupTenant' %}",
+                data: {  // 要送去後端的參數(可以為空)
+                    house_id: houseid
+                },
+            })
+                .done(function (data) {
+                    // 動態生成聯絡人資訊的HTML
+                    var users = "";
+                    data.group_tenant_users.forEach(function (user) {
+                        users += `<div class="row">
+                            <div class="col">${user.group_tenant_user_name}</div>
+                            <div class="col">${user.group_tenant_user_phone}</div>
+                            <div class="col">${user.group_tenant_user_email}</div>
+                            <div class="col">${user.group_tenant_user_input}</div>
+                          </div>`;
+                    });
+
+                    // 確認目前登入者是否在合租列表中
+                    var userEmail = "{{ request.user.email }}";
+                    var isUserInGroup = data.group_tenant_users.some(function (user) {
+                        return user.group_tenant_user_email === userEmail;
+                    });
+
+                    // 插入modal內容
+                    var modalContent = `
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">合租剩餘需求人數：${data.group_tenant_value}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="contactInfo">${users}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="joinLeaveButton" onclick="joinLeaveGroup(${houseid})">${isUserInGroup ? '我要取消' : '我要加入'}</button>
+                </div>`;
+
+                    // 插入到 DOM 中
+                    $('#contactModal .modal-content').html(modalContent);
+
+                    // 顯示Modal
+                    $("#contactModal").modal("show");
+                    $('#loading-spinner').hide();  // 隱藏 Spinner
+                })
+                .fail(function (xhr, status, error) {
+                    $('#loading-spinner').hide();  // 隱藏 Spinner
+                });
+        }
+
+}
+
+        var csrf_token = "{{ csrf_token }}";
+        function joinLeaveGroup(houseid) {
+            var buttonText = $("#joinLeaveButton").text().trim();
+            // 判斷按鈕內文
+            if (buttonText === "我要加入") {
+                var userInput = prompt("請輸入您的留言：");
+                // 執行加入操作
+                if (userInput !== null) {
+                    $('#loading-spinner').show();
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'Join_group' %}",  // 請替換為你的後端路由
+                        data: {
+                            houseid: houseid,
+                            user_input: userInput,
+                            csrfmiddlewaretoken: csrf_token  // 包含 CSRF token
+                        },
+                        success: function (data) {
+                            alert("加入成功！");
+                            $("#contactModal").modal("hide");  // 隱藏 Modal
+                            $('#loading-spinner').hide();  // 隱藏 Spinner
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                            // 處理錯誤
+                        }
+                    });
+                } else {
+                    $('#loading-spinner').hide();  // 隱藏 Spinner
+                }
+            } else if (buttonText === "我要取消") {
+                $('#loading-spinner').show();
+                // 執行取消操作
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'Leave_group' %}",  // 請替換為你的後端路由
+                    data: {
+                        houseid: houseid,
+                        csrfmiddlewaretoken: csrf_token  // 包含 CSRF token
+                    },
+                    success: function (data) {
+                        alert("取消成功！");
+                        $("#contactModal").modal("hide");  // 隱藏 Modal
+                        $('#loading-spinner').hide();  // 隱藏 Spinner
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        // 處理錯誤
+                    }
+                });
+            }
+
+        }
+    </script>
+
+</body>
+</html>
+{% endblock %}

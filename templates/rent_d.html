@@ -1,0 +1,726 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+{% load static %}
+<div style="background-color: #ced6fb;">
+    <div class="container"> <!--同地址出租<5間>房間一次送出--> <!--enctype="multipart/form-data" 支持文件上傳-->
+        <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" method="POST" id="myForm" enctype="multipart/form-data"> {% csrf_token %}
+            <input type="hidden" name="房型" value="整層住家">  <!--儲存房型資訊-->
+            <input type="hidden" name="來源平台" value="中原租屋網">  <!--儲存來源平台-->
+
+            <div class="" style="background-color: #ced6fb;"><font size="5">1.基本資料：</font></div>
+            <div class="row">
+                <div class="col-auto">
+                    <br>建物類型：
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="radio" name="建物類型" id="building_1" value="公寓" required>
+                        <label class="form-check-label" for="building_1">公寓</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="radio" name="建物類型" id="building_2" value="電梯大樓">
+                        <label class="form-check-label" for="building_2">電梯大樓</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="radio" name="建物類型" id="building_3" value="透天厝">
+                        <label class="form-check-label" for="building_3">透天厝</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="radio" name="建物類型" id="building_4" value="別墅">
+                        <label class="form-check-label" for="building_4">別墅</label>
+                    </div>
+                </div>
+                <!--
+                <div class="col-auto d-flex align-items-center">
+                    <button type="button" class="btn btn-primary" id="checkDistanceBtn">檢查距離</button>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <div id="addressMessage"></div>
+                    <img id="errorImage" src="{% static 'images/error.png' %}" alt="error" width="30" height="30" style="display:none;">
+                    <img id="passImage" src="{% static 'images/pass-removebg.png' %}" alt="pass" width="30" height="30" style="display:none;">
+                </div>
+                -->
+            </div>
+
+            <div class="row">
+                <div class="col-10">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">地址：</span>
+                        <select class="form-select" id="citySelect" style="display:block;">
+                            <option value="選擇縣市">選擇縣市</option>
+                        </select>
+
+                        <select class="form-select" id="areaSelect" style="display:block;">
+                            <option value="選擇區域">選擇區域</option>
+                        </select>
+
+                        <input type="text" class="form-control w-25" name="地址" id="address" required> <!--提交前合併-->
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="目前只提供騎車距離中原10分鐘內的租屋處刊登。">
+                            ？
+                        </button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <a type="button" id="switchAddressBtn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="切換輸入方式">
+                        <img src="{% static 'images/switchBtn-removebg.png' %}" alt="切換圖標" width="30" height="30">
+                    </a>
+                </div>
+            </div>
+
+            <div class="input-group w-25 mb-3">
+              <span class="input-group-text">樓層：</span>
+              <input type="number" class="form-control" name="樓層" required>
+              <span class="input-group-text">樓</span>
+            </div>
+
+            <div class="input-group w-75 mb-3">
+              <span class="input-group-text">格局：</span>
+              <input type="number" class="form-control" id="格局_房數id" required>
+              <input type="hidden" name="格局_房數">
+              <span class="input-group-text">房</span>
+              <input type="number" class="form-control" id="格局_衛浴數id" required>
+              <input type="hidden" name="格局_衛浴數">
+              <span class="input-group-text">衛</span>
+              <input type="number" class="form-control" name="格局_廚房數" required>
+              <span class="input-group-text">廚</span>
+              <input type="number" class="form-control" id="格局_客廳數id" required>
+              <input type="hidden" name="格局_客廳數">
+              <span class="input-group-text">廳</span>
+              <input type="number" class="form-control" name="格局_陽台數" required>
+              <span class="input-group-text">陽</span>
+            </div>
+
+            <div class="input-group w-25 mb-3">
+              <span class="input-group-text">坪數：</span>
+              <input type="number" class="form-control" name="坪數" required>
+              <span class="input-group-text">坪</span>
+            </div>
+
+            提供家具：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_1" name="提供家具_桌子" value="true">  <!--value在提交前從js轉換-->
+                <label class="form-check-label" for="furniture_1">桌子</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_2" name="提供家具_椅子" value="">
+                <label class="form-check-label" for="furniture_2">椅子</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_3" name="提供家具_沙發" value="">
+                <label class="form-check-label" for="furniture_3">沙發</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_4" name="提供家具_衣櫃" value="">
+                <label class="form-check-label" for="furniture_4">衣櫃</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_5" name="提供家具_收納櫃" value="">
+                <label class="form-check-label" for="furniture_5">收納櫃</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_6" name="提供家具_床" value="">
+                <label class="form-check-label" for="furniture_6">床</label>
+            </div>
+
+            <br>提供設備：
+            <div class="row">
+                <div class="border border-2 rounded" style="width:145px; padding: 10px; margin:10px;">
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="checkbox" id="furniture_7" name="提供設備_洗衣機" value="" onchange="toggleFurniture('furniture_7')">
+                        <label class="form-check-label" for="furniture_7">洗衣機</label>
+                    </div><br>
+                    <input type="radio" class="btn-check" name="洗衣機類型" value="獨立" id="furniture_7_type1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_7_type1">獨立</label>
+
+                    <input type="radio" class="btn-check" name="洗衣機類型" value="共用" id="furniture_7_type2" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_7_type2">共用</label>
+                </div>
+
+                <div class="border border-2 rounded" style="width:145px; padding: 10px; margin:10px;">
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="checkbox" id="furniture_8" name="提供設備_烘衣機" value="" onchange="toggleFurniture('furniture_8')">
+                        <label class="form-check-label" for="furniture_8">烘衣機</label>
+                    </div>
+                    <input type="radio" class="btn-check" name="烘衣機類型" value="獨立" id="furniture_8_type1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_8_type1">獨立</label>
+
+                    <input type="radio" class="btn-check" name="烘衣機類型" value="共用" id="furniture_8_type2" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_8_type2">共用</label>
+                </div>
+
+                <div class="border border-2 rounded" style="width:145px; padding: 10px; margin:10px;">
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="checkbox" id="furniture_9" name="提供設備_冰箱" value="" onchange="toggleFurniture('furniture_9')">
+                        <label class="form-check-label" for="furniture_9">冰箱</label>
+                    </div>
+                    <input type="radio" class="btn-check" name="冰箱類型" value="獨立" id="furniture_9_type1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_9_type1">獨立</label>
+
+                    <input type="radio" class="btn-check" name="冰箱類型" value="共用" id="furniture_9_type2" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_9_type2">共用</label>
+                </div>
+
+                <div class="border border-2 rounded" style="width:145px; padding: 10px; margin:10px;">
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="checkbox" id="furniture_10" name="提供設備_冷氣" value="" onchange="toggleFurniture('furniture_10')">
+                        <label class="form-check-label" for="furniture_10">冷氣</label>
+                    </div>
+                    <input type="radio" class="btn-check" name="冷氣類型" value="變頻" id="furniture_10_type1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_10_type1">變頻</label>
+
+                    <input type="radio" class="btn-check" name="冷氣類型" value="窗型" id="furniture_10_type2" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_10_type2">窗型</label>
+                </div>
+
+                <div class="border border-2 rounded" style="width:145px; padding: 10px; margin:10px;">
+                    <div class="form-check form-check-inline mb-3">
+                        <input class="form-check-input" type="checkbox" id="furniture_11" name="提供設備_室內窗" value="" onchange="toggleFurniture('furniture_11')">
+                        <label class="form-check-label" for="furniture_11">室內窗</label>
+                    </div>
+                    <input type="radio" class="btn-check" name="室內窗類型" value="一般" id="furniture_11_type1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_11_type1">一般</label>
+
+                    <input type="radio" class="btn-check" name="室內窗類型" value="氣密" id="furniture_11_type2" autocomplete="off" disabled>
+                    <label class="btn btn-outline-secondary" style="transform: scale(0.9); padding: 10px;" for="furniture_11_type2">氣密</label>
+                </div>
+            </div>
+        
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_12" name="提供設備_電梯" value="">
+                <label class="form-check-label" for="furniture_12">電梯</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_13" name="提供設備_熱水器" value="">
+                <label class="form-check-label" for="furniture_13">熱水器</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_14" name="提供設備_天然瓦斯" value="">
+                <label class="form-check-label" for="furniture_14">天然瓦斯</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_15" name="提供設備_電視" value="">
+                <label class="form-check-label" for="furniture_15">電視</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_16" name="提供設備_第四台" value="">
+                <label class="form-check-label" for="furniture_16">第四台</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" id="furniture_17" name="提供設備_網路" value="">
+                <label class="form-check-label" for="furniture_17">網路</label>
+            </div>
+
+
+            <hr><div class="" style="background-color: #ced6fb;"><font size="5">2.價格：</font></div><br>
+
+            <div class="input-group w-50 mb-3">
+              <span class="input-group-text">月租金：</span>
+              <input type="number" class="form-control" name="價格" aria-label="月租金" aria-describedby="month_rent_money" required>
+              <span class="input-group-text" id="month_rent_money">元/月</span>
+            </div>
+
+            <div class="input-group w-50 mb-3">
+              <span class="input-group-text">押金：</span>
+              <input type="number" class="form-control" name="押金" aria-label="押金" aria-describedby="deposit" required>
+              <span class="input-group-text" id="deposit">元</span>
+            </div>
+
+            電費計費方式：
+            <div class="input-group w-50 mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="電費類型" id="elec_1" value="台電" onchange="RadioToDisabledInput('elec')" required>
+                    <label class="form-check-label" for="elec_1">　台電</label>
+                </div>
+                <span class="input-group-text">或</span>
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="電費類型" id="elec_2" value="自訂" onchange="RadioToEnabledInput('elec')">
+                    <label class="form-check-label" for="elec_2">　一度</label>
+                </div>
+                <input type="number" class="form-control" name="自訂電費價格" id="elec_input" disabled>
+                <span class="input-group-text">元</span>
+            </div>
+
+            水費計費方式：
+            <div class="input-group w-50 mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="水費類型" id="water_1" value="台水" onchange="RadioToDisabledInput('water')" required>
+                    <label class="form-check-label" for="water_1">　台水</label>
+                </div>
+                <span class="input-group-text">或</span>
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="水費類型" id="water_2" value="自訂" onchange="RadioToEnabledInput('water')">
+                    <label class="form-check-label" for="water_2">　每個月</label>
+                </div>
+                <input type="number" class="form-control" name="自訂水費價格" id="water_input" disabled>
+                <span class="input-group-text">元</span>
+            </div>
+
+            停車位：
+            <div class="input-group w-50 mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="提供停車位" id="car" value="true" onchange="RadioToEnabledInput('car')" required>
+                    <label class="form-check-label" for="car">　有，每個月</label>
+                </div>
+                <input type="number" class="form-control" name="停車位費用" id="car_input" disabled>
+                <span class="input-group-text">元</span>
+            </div>
+            <div class="input-group-text" style="width:100px;">
+                <input class="form-check-input mt-0" type="radio" name="提供停車位" id="nocar" value="false" onchange="RadioToDisabledInput('car')">
+                <label class="form-check-label" for="nocar">　無</label>
+            </div>
+
+            管理費：
+            <div class="input-group w-50 mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="需要管理費" id="management" value="true" onchange="RadioToEnabledInput('management')" required>
+                    <label class="form-check-label" for="management">　有，每個月</label>
+                </div>
+                <input type="number" class="form-control" name="管理費費用" id="management_input" disabled>
+                <span class="input-group-text">元</span>
+            </div>
+            <div class="input-group-text" style="width:100px;">
+                <input class="form-check-input mt-0" type="radio" name="需要管理費" id="nomanagement" value="false" onchange="RadioToDisabledInput('management')">
+                <label class="form-check-label" for="nomanagement">　無</label>
+            </div>
+
+            <hr><div class="" style="background-color: #ced6fb;"><font size="5">3.其他：</font></div><br>
+
+            <div class="input-group w-50 mb-3">
+              <span class="input-group-text">廣告標題：</span>
+              <input type="text" class="form-control" name="廣告標題" aria-label="廣告標題" aria-describedby="adTitle" required>
+            </div>
+
+            <div class="input-group w-25 mb-3">
+              <span class="input-group-text">最短租期：</span>
+              <input type="number" class="form-control" name="最短租期" required>
+              <select class="form-select" id="select_tenant_term" name="最短租期單位">
+                <option value="年">年</option>
+                <option value="月">個月</option>
+                <option value="天">天</option>
+              </select>
+            </div>
+
+            刊登者類型：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="刊登者類型" id="publisher_1" value="屋主" required>
+                <label class="form-check-label" for="publisher_1">屋主</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="刊登者類型" id="publisher_2" value="代理人">
+                <label class="form-check-label" for="publisher_2">代理人</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="刊登者類型" id="publisher_3" value="房仲">
+                <label class="form-check-label" for="publisher_3">房仲</label>
+            </div>
+
+            <br>性別限制：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有性別限制" id="gender_nolimit" value="false" required checked>
+                <label class="form-check-label" for="gender_nolimit">不限</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有性別限制" id="gender_limit" value="true">
+                <label class="form-check-label" for="gender_limit">限：</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="性別限制" id="limit_man" value="男性" disabled>
+                <label class="form-check-label" for="gender_2">男</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="性別限制" id="limit_woman" value="女性" disabled>
+                <label class="form-check-label" for="gender_3">女</label>
+            </div>
+
+            <br>身分限制：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有身分限制" id="identity_n" value="false" required checked>
+                <label class="form-check-label" for="identity_n">不限</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有身分限制" id="identity_y" value="true">
+                <label class="form-check-label" for="identity_y">限：</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input identity-checkbox" type="checkbox" id="identity_1" name="身分限制_學生" disabled>
+                <label class="form-check-label" for="identity_1">學生</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input identity-checkbox" type="checkbox" id="identity_2" name="身分限制_上班族" disabled>
+                <label class="form-check-label" for="identity_2">上班族</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input identity-checkbox" type="checkbox" id="identity_3" name="身分限制_家庭" disabled>
+                <label class="form-check-label" for="identity_3">家庭</label>
+            </div>
+
+            <br>寵物限制：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有寵物限制" id="pet_1" value="true" required>
+                <label class="form-check-label" for="pet_1">可寵</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有寵物限制" id="pet_2" value="false">
+                <label class="form-check-label" for="pet_2">不可</label>
+            </div>
+
+            <br>是否可伙：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="是否可伙" id="cook_1" value="true" required>
+                <label class="form-check-label" for="cook_1">可伙</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="是否可伙" id="cook_2" value="false">
+                <label class="form-check-label" for="cook_2">不可</label>
+            </div>
+
+            <br>核實訊息：
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有產權登記" id="property_1" value="true" required>
+                <label class="form-check-label" for="property_1">已辦產權登記</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" name="有產權登記" id="property_2" value="false">
+                <label class="form-check-label" for="property_2">未辦產權登記</label>
+            </div>
+
+            <div class="mb-3"> <!--限制圖片格式、檔案大小-->
+              <label for="picture_multi" class="form-label">上傳圖片：</label>
+              <input class="form-control" type="file" name="picture_multi" id="picture_multi" multiple required>  <!--上傳檔案，(後端會把欄位刪掉)-->
+              <input type="hidden" name="圖片路徑" id="image_paths">  <!--上傳後的路徑-->
+            </div>
+            <div class="row" id="image_preview_container"></div>  <!-- 用於顯示所有圖片的預覽->js -->
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="agreePublic" required>
+                <label class="form-check-label" for="agreePublic">同意將個人姓名、電話、Email在刊登房屋處公開。</label>
+            </div>
+
+            <!--按下這個submit送出按鈕就可以把文字送到後端-->
+            <button class="button-30 w-75 position-relative start-50 translate-middle-x" id="submitBtn" type="submit" value="Submit">送出</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // tooltip ----------------------------------------------------
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // 上傳圖片 ----------------------------------------------------
+    document.getElementById('picture_multi').addEventListener('change', function() {
+        var previewContainer = document.getElementById('image_preview_container');
+        previewContainer.innerHTML = ''; // 清空預覽容器
+
+        // 遍歷所有選擇的檔案
+        for (var i = 0; i < this.files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var image = document.createElement('img');  // <img>
+                image.src = e.target.result;
+                image.classList.add('preview-image');  // class="preview-image"
+
+                var col = document.createElement('div');   // <div>
+                col.classList.add('col-3', 'mb-3');    // class="col-3 mb-3" 將多個預覽圖片按列排列
+                col.appendChild(image);   // 每col添加一個image
+
+                previewContainer.appendChild(col);
+            };
+            reader.readAsDataURL(this.files[i]);
+        }
+    });
+    // gender ----------------------------------------------------
+    const genderRadios = document.querySelectorAll('[name="有性別限制"]');
+    const limit_man = document.getElementById('limit_man');
+    const limit_woman = document.getElementById('limit_woman');
+
+    genderRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (radio.value === 'true') {
+                limit_man.disabled = false;
+                limit_woman.disabled = false;
+                limit_man.required = true;
+            } else {
+                limit_man.disabled = true;
+                limit_woman.disabled = true;
+                limit_man.required = false;
+                // 清除核取框的選中狀態
+                limit_man.checked = false;
+                limit_woman.checked = false;
+            }
+        });
+    });
+
+    // identity ----------------------------------------------------
+    const identityRadios = document.querySelectorAll('[name="有身分限制"]');
+    const student = document.getElementById('identity_1');
+    const worker = document.getElementById('identity_2');
+    const family = document.getElementById('identity_3');
+
+    identityRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (radio.value === 'true') {
+                student.disabled = false;
+                worker.disabled = false;
+                family.disabled = false;
+            } else {
+                student.disabled = true;
+                worker.disabled = true;
+                family.disabled = true;
+                // 清除核取框的選中狀態
+                student.checked = false;
+                worker.checked = false;
+                family.checked = false;
+            }
+        });
+    });
+
+    // furniture按鈕的可用和禁用 ----------------------------------------------------
+    function toggleFurniture(type) {
+        var checkbox = document.getElementById(type);
+        var radio1 = document.getElementById(type + '_type1');
+        var radio2 = document.getElementById(type + '_type2');
+
+        if (checkbox.checked) {
+            radio1.disabled = false; // 可用
+            radio1.checked = true;   // 避免使用者未選擇
+            radio2.disabled = false;
+        } else {
+            radio1.disabled = true; // 禁用
+            radio1.checked = false;
+            radio2.disabled = true;
+            radio2.checked = false;
+        }
+    }
+
+    // 輸入框可用和禁用 的觸發function
+    function RadioToDisabledInput(radioID) {
+        // 此radio勾選，則input框禁用
+        document.getElementById(radioID + '_input').disabled = true;
+        document.getElementById(radioID + '_input').value = '';
+    }
+
+    function RadioToEnabledInput(radioID) {
+        // 此radio勾選，則input框啟用
+        document.getElementById(radioID + '_input').disabled = false;
+    }
+
+    // address 下拉列表填充 ----------------------------------------------------
+    var citySelect = document.getElementById('citySelect');
+    var areaSelect = document.getElementById('areaSelect');
+
+    // 加載json ----------------------------------------------------
+    fetch('{% static 'js/citydata.json' %}')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            // 填充縣市下拉列表
+            data.forEach(function (cityData) {
+                var option = document.createElement('option');
+                option.value = cityData.CityName;
+                option.textContent = cityData.CityName;
+                citySelect.appendChild(option);
+            });
+
+            // 手動設置縣市為"桃園市" **中原限定**
+            citySelect.value = '桃園市';
+            citySelect.disabled = true; // 禁用
+
+            // 添加縣市下拉列表的change事件監聽器
+            citySelect.addEventListener('change', function () {
+                var selectedCityName = citySelect.value;
+                var selectedCityData = data.find(function (cityData) {
+                    return cityData.CityName === selectedCityName;
+                });
+
+                // 清空區域下拉列表
+                areaSelect.innerHTML = '<option value="選擇區域">選擇區域</option>';
+
+                // 填充區域下拉列表
+                if (selectedCityData) {
+                    selectedCityData.AreaList.forEach(function (areaData) {
+                        var option = document.createElement('option');
+                        option.value = areaData.AreaName;
+                        option.textContent = areaData.AreaName;
+                        areaSelect.appendChild(option);
+                    });
+                }
+            });
+
+            // 手動觸發縣市下拉列表的change事件 **中原限定**
+            var changeEvent = new Event('change', { bubbles: true });
+            citySelect.dispatchEvent(changeEvent);
+
+        })
+        .catch(function (error) {
+            console.error('加載數據失敗：', error);
+        });
+
+    // address 切換 ----------------------------------------------------
+    var citySelect = document.getElementById('citySelect');
+    var areaSelect = document.getElementById('areaSelect');
+    
+    // 切換按鈕的點擊事件監聽器 ----------------------------------------------------
+    document.getElementById('switchAddressBtn').addEventListener('click', function() {
+        if (citySelect.style.display === 'block') {
+            citySelect.style.display = 'none';
+            areaSelect.style.display = 'none';
+        } else {
+            citySelect.style.display = 'block';
+            areaSelect.style.display = 'block';
+        }
+    });
+
+    // submit前:確認身分至少選擇1、地址組合、是否勾選的值轉換 ----------------------------------------------------
+    document.getElementById("myForm").addEventListener("submit", function (event) {
+        event.preventDefault();  // 先阻止表單提交，處理以下：
+
+        // --確認身分至少選擇1--
+        var identity_y_checkbox = document.getElementById('identity_y');
+        if ( identity_y_checkbox.checked ) {
+            var identityCheckboxes = document.querySelectorAll('.identity-checkbox');
+            var atLeastOneSelected = false;
+            identityCheckboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    atLeastOneSelected = true;
+                }
+            });
+
+            // 如果沒有選中，顯示提示並阻止提交表單
+            if (!atLeastOneSelected) {
+                alert("請至少選擇一種身分限制，否則選擇\"不限\"");
+                event.preventDefault(); // 阻止表單提交
+                return; // 結束函數
+            }
+        }
+
+        // --地址組合--
+        var citySelect = document.getElementById('citySelect');
+        var areaSelect = document.getElementById('areaSelect');
+        var address = document.getElementById("address").value;
+        var newAddress = "";
+        if (citySelect.style.display === 'block') {  // 顯示
+            var city = document.getElementById("citySelect").value;
+            var area = document.getElementById("areaSelect").value;
+            newAddress = city + area + address; // 組合地址
+        } else {
+            newAddress = address;
+        }
+        
+        // 判斷是否以"桃園市"開頭
+        if (!newAddress.startsWith("桃園市")) {
+            alert("房屋地址必須在\"桃園市\"！");
+            return; // 阻止表單提交
+        }
+        if (citySelect.style.display === 'block' && document.getElementById("areaSelect").value == "選擇區域"){
+            alert("地址必須選擇一個區域！");
+            return; // 阻止表單提交
+        }
+
+        document.getElementById("address").value = newAddress; // 修改地址
+
+        // --家具是否勾選的值轉換--
+        var furnitureIDs = [];
+        for (var i = 1; i <= 17; i++) {   // 目前家具編號到17
+            furnitureIDs.push('furniture_' + i);
+        }
+
+        furnitureIDs.forEach(function (id) {
+            var furniture = document.getElementById(id);
+            document.getElementById(id).value = furniture.checked ? 'true' : 'false';
+        });
+
+        // 其他：
+        var identity_1 = document.getElementById("identity_1");
+        document.getElementById("identity_1").value = identity_1.checked ? 'true' : 'false';
+        var identity_2 = document.getElementById("identity_2");
+        document.getElementById("identity_2").value = identity_2.checked ? 'true' : 'false';
+        var identity_3 = document.getElementById("identity_3");
+        document.getElementById("identity_3").value = identity_3.checked ? 'true' : 'false';
+
+        // --手動表單提交--
+        this.submit();
+    });
+
+    /*
+    // google map API 計算地址 ----------------------------------------------------
+    // 初始化 Google Maps 服務
+    var directionsService = new google.maps.DirectionsService();
+    
+    // 添加按钮點擊事件監聽器
+    document.getElementById('checkDistanceBtn').addEventListener('click', function () {
+
+        var houseAddress = '';
+
+        if (citySelect.style.display === 'block') {
+            houseAddress = citySelect.value + areaSelect.value + document.getElementById('address').value;
+        }
+        else {
+            houseAddress = document.getElementById('address').value;
+        }
+
+        // 設置目標地址:中原大學
+        var targetAddress = '桃園市中壢區中北路200號';
+
+        // 創建 DirectionsRequest 對象
+        var request = {
+            origin: houseAddress,
+            destination: targetAddress,
+            travelMode: google.maps.TravelMode.DRIVING // 騎/開車模式
+        };
+
+        // 發送 Directions 請求
+        directionsService.route(request, function (result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                // 獲取騎車時間（以秒為單位）
+                var bikingTimeSeconds = result.routes[0].legs[0].duration.value;
+
+                // 將騎車時間轉換為分鐘
+                var bikingTimeMinutes = Math.round(bikingTimeSeconds / 60);
+
+                // 根據騎車時間顯示不同的消息
+                var addressMessage = document.getElementById('addressMessage');
+                var errorImage = document.getElementById('errorImage');
+                var passImage = document.getElementById('passImage');
+                if (bikingTimeMinutes > 10) {
+                    addressMessage.textContent = "此地址距離中原太遠";
+                    errorImage.style.display = 'block';
+                    passImage.style.display = 'none';
+                } else {
+                    addressMessage.textContent = "地址驗證通過";
+                    errorImage.style.display = 'none';
+                    passImage.style.display = 'block';
+                }
+            } else {
+                // 處理錯誤狀況
+                console.error('Directions request failed:', status);
+                alert('請先填寫地址並確認地址無誤。');
+            }
+        });
+    });
+
+    // 按下送出按鈕check ----------------------------------------------------
+    var submitBtn = document.getElementById('submitBtn');
+    var addressMessage = document.getElementById('addressMessage');
+    var checkDistanceBtn = document.getElementById('checkDistanceBtn');
+
+    // submit點擊事件監聽器
+    submitBtn.addEventListener('click', function (event) {
+        // 檢查消息
+        if (addressMessage.textContent == "此地址距離中原太遠" || addressMessage.textContent == "") {
+            event.preventDefault(); // 阻止表單提交
+
+            // 顯示提示消息
+            alert('請先檢查地址是否通過！');
+
+            // 將頁面滾動到指定位置
+            checkDistanceBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            checkDistanceBtn.focus(); // 設置焦點
+        }
+    });
+    */
+</script>
+
+{% endblock  %}
